@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moto Diário · Samuel, Luan & Kaio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- MENU SUPERIOR -->
+    <nav class="top-menu">
+        <button class="menu-toggle" id="menuToggle">⋮</button>
+        <div class="menu-dropdown hidden" id="menuDropdown">
+            <button class="menu-item" data-section="home">🏠 Início</button>
+            <button class="menu-item" data-section="rankings">🏆 Rankings</button>
+            <button class="menu-item" data-section="trips">🛵 Viagens</button>
+            <button class="menu-item" data-section="history">📅 Histórico</button>
+        </div>
+        <h1 class="nav-title">🏍️ MOTO DIÁRIO</h1>
+    </nav>
+
+    <div id="app">
+
+        <!-- ── TELA INICIAL ──────────────────────────────────────────────── -->
+        <section id="homeSection" class="screen">
+            <div class="total-box">
+                <div class="total-row">
+                    <div>
+                        <div class="total-label">TOTAL VIAGENS</div>
+                        <div class="total-value" id="totalTrips">0</div>
+                    </div>
+                    <div>
+                        <div class="total-label">TOTAL GASTO</div>
+                        <div class="total-value" id="totalSpent">R$ 0,00</div>
+                    </div>
+                </div>
+                <div class="sync-indicator">⚡ local</div>
+            </div>
+
+            <div class="user-grid">
+                <!-- Samuel -->
+                <div class="user-card" data-user="samuel">
+                    <div class="user-card-content">
+                        <div class="user-icon">🤓</div>
+                        <div class="user-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Viagens</span>
+                                <span class="stat-value counter-large" id="trips-samuel">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Gasto</span>
+                                <span class="stat-value spent-value" id="spent-samuel">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div class="user-name">Samuel</div>
+                    </div>
+                    <button class="btn-remove btn-remove-disabled" id="remove-samuel" data-user="samuel" disabled>
+                        ↩ Desfazer
+                    </button>
+                </div>
+
+                <!-- Luan -->
+                <div class="user-card" data-user="luan">
+                    <div class="user-card-content">
+                        <div class="user-icon">🧐</div>
+                        <div class="user-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Viagens</span>
+                                <span class="stat-value counter-large" id="trips-luan">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Gasto</span>
+                                <span class="stat-value spent-value" id="spent-luan">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div class="user-name">Luan</div>
+                    </div>
+                    <button class="btn-remove btn-remove-disabled" id="remove-luan" data-user="luan" disabled>
+                        ↩ Desfazer
+                    </button>
+                </div>
+
+                <!-- Kaio -->
+                <div class="user-card" data-user="kaio">
+                    <div class="user-card-content">
+                        <div class="user-icon">😎</div>
+                        <div class="user-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Viagens</span>
+                                <span class="stat-value counter-large" id="trips-kaio">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Gasto</span>
+                                <span class="stat-value spent-value" id="spent-kaio">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div class="user-name">Kaio</div>
+                    </div>
+                    <button class="btn-remove btn-remove-disabled" id="remove-kaio" data-user="kaio" disabled>
+                        ↩ Desfazer
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── RANKINGS ──────────────────────────────────────────────────── -->
+        <section id="rankingsSection" class="screen hidden">
+            <h2 class="section-title">🏆 RANKINGS DO MÊS</h2>
+            <div class="rankings-container">
+                <div class="ranking-box">
+                    <h3>🏍️ Mais Viagens</h3>
+                    <div class="ranking-list" id="rankingTrips"></div>
+                </div>
+                <div class="ranking-box">
+                    <h3>💰 Mais Gastos</h3>
+                    <div class="ranking-list" id="rankingSpent"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── VIAGENS DO MÊS (feed em tempo real) ───────────────────────── -->
+        <section id="tripsSection" class="screen hidden">
+            <h2 class="section-title">🛵 VIAGENS DO MÊS</h2>
+            <div class="trips-feed" id="tripsFeed">
+                <p class="empty-message">Nenhuma viagem registrada este mês</p>
+            </div>
+        </section>
+
+        <!-- ── HISTÓRICO MENSAL ───────────────────────────────────────────── -->
+        <section id="historySection" class="screen hidden">
+            <h2 class="section-title">📅 HISTÓRICO MENSAL</h2>
+            <div class="history-list" id="historyList">
+                <p class="empty-message">Nenhum mês encerrado ainda</p>
+            </div>
+            <div class="history-detail hidden" id="historyDetail"></div>
+        </section>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-icon" id="modalIcon">🤓</div>
+            <h3 class="modal-title" id="modalTitle">Samuel</h3>
+            <p class="modal-subtitle">Quanto você gastou na viagem?</p>
+            <input type="number" class="modal-input" id="modalAmount"
+                   placeholder="R$ 00.00" min="0" step="0.01" inputmode="decimal">
+            <button class="btn btn-primary modal-btn" id="modalConfirm">
+                ✅ Confirmar Viagem
+            </button>
+            <p class="modal-error hidden" id="modalError">Digite um valor válido</p>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="storage.js"></script>
+    <script src="ui.js"></script>
+    <script src="ranking.js"></script>
+    <script src="modal.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
