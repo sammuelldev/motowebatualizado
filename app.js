@@ -2,28 +2,29 @@
  * Arquivo principal
  */
 
-(function () {
+(async function () {
     'use strict';
 
-    // ── Zera tudo na primeira carga (garante slate limpo) ─────────────────────
-    Storage.hardReset();
-
-    // ── Verifica virada de mês a cada 5 minutos (sem precisar recarregar) ────
-    setInterval(() => {
-        const resetou = Storage.checkMonthlyReset();
-        if (resetou) {
-            UI.updateHome(Storage.getCurrentData());
-            Rankings.update();
-            UI.renderTripsFeed();
-            UI.showToast('Novo mês iniciado! Dados do mês anterior salvos no Histórico.', 'success');
-        }
-    }, 5 * 60 * 1000);
+    // ── Inicializa Firebase + carrega dados ───────────────────────────────────
+    await Storage.init();
 
     // ── Inicializa módulos ────────────────────────────────────────────────────
     Modal.init();
 
     const data = Storage.getCurrentData();
     UI.updateHome(data);
+    UI.renderTripsFeed();
+
+    // ── Verifica virada de mês a cada 5 minutos ───────────────────────────────
+    setInterval(async () => {
+        const resetou = await Storage.checkMonthlyReset();
+        if (resetou) {
+            UI.updateHome(Storage.getCurrentData());
+            Rankings.update();
+            UI.renderTripsFeed();
+            UI.showToast('Novo mês iniciado! Dados salvos no Histórico.', 'success');
+        }
+    }, 5 * 60 * 1000);
 
     // ── Menu toggle ───────────────────────────────────────────────────────────
     UI.elements.menuToggle.addEventListener('click', e => {
@@ -79,5 +80,5 @@
         });
     });
 
-    console.log('✅ Moto Diário v2 inicializado — dados zerados.');
+    console.log('✅ Moto Diário v2 inicializado — Firebase conectado.');
 })();
