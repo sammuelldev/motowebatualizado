@@ -230,6 +230,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 0.85rem;
+    width: 100%;
 }
 
 .user-emoji { font-size: 2rem; flex-shrink: 0; line-height: 1; }
@@ -266,6 +267,7 @@ body::before {
     line-height: 1;
     letter-spacing: 1px;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 .trips-badge--samuel { color: var(--samuel); }
