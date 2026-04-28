@@ -196,33 +196,41 @@ body::before {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1rem 1rem 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
+    padding: 0;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s, transform 0.15s;
     overflow: hidden;
+    display: block;
 }
+
+.user-card:hover  { border-color: var(--border2); background: var(--surface2); }
+.user-card:active { transform: scale(0.99); }
 
 /* barra lateral colorida */
 .user-stripe {
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 3px;
-    border-radius: 3px 0 0 3px;
 }
 
 .user-stripe--samuel { background: var(--samuel); }
 .user-stripe--luan   { background: var(--luan); }
 .user-stripe--kaio   { background: var(--kaio); }
 
-.user-card:hover {
-    border-color: var(--border2);
-    background: var(--surface2);
-    transform: translateX(3px);
+/* inner wrapper com padding */
+.user-card-inner {
+    padding: 0.9rem 1rem 0.9rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
 }
-.user-card:active { transform: scale(0.99) translateX(0); }
+
+/* linha de cima: emoji + info + badge */
+.user-card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
 
 .user-emoji { font-size: 2rem; flex-shrink: 0; line-height: 1; }
 
@@ -233,7 +241,7 @@ body::before {
     font-size: 1.35rem;
     letter-spacing: 2px;
     line-height: 1;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.3rem;
 }
 
 .user-stats-row {
@@ -252,19 +260,12 @@ body::before {
     font-weight: 600;
 }
 
-.user-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.4rem;
-    flex-shrink: 0;
-}
-
 .trips-badge {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     line-height: 1;
     letter-spacing: 1px;
+    flex-shrink: 0;
 }
 
 .trips-badge--samuel { color: var(--samuel); }
