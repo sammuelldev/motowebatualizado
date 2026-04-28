@@ -2,42 +2,74 @@
  * Manipulação da Interface do Usuário
  */
 
+// ── Animação de números ────────────────────────────────────────────────────────
+function animateNumber(el, newVal, currency = false, duration = 400) {
+    const startVal = parseFloat(el.dataset.animVal || 0);
+    el.dataset.animVal = newVal;
+    if (startVal === newVal) return;
+
+    const startTime = performance.now();
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+    function tick(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const current  = startVal + (newVal - startVal) * easeOut(progress);
+
+        if (currency) {
+            el.textContent = 'R$ ' + current.toFixed(2).replace('.', ',');
+        } else {
+            el.textContent = Math.round(current);
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            el.textContent = currency
+                ? 'R$ ' + newVal.toFixed(2).replace('.', ',')
+                : Math.round(newVal);
+        }
+    }
+
+    requestAnimationFrame(tick);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const UI = {
     elements: {
-        totalTrips:       document.getElementById('totalTrips'),
-        totalSpent:       document.getElementById('totalSpent'),
-        homeSection:      document.getElementById('homeSection'),
-        rankingsSection:  document.getElementById('rankingsSection'),
-        tripsSection:     document.getElementById('tripsSection'),
-        historySection:   document.getElementById('historySection'),
-        chartsSection:    document.getElementById('chartsSection'),
-        rankingTrips:     document.getElementById('rankingTrips'),
-        rankingSpent:     document.getElementById('rankingSpent'),
-        tripsFeed:        document.getElementById('tripsFeed'),
-        historyList:      document.getElementById('historyList'),
-        historyDetail:    document.getElementById('historyDetail'),
-        menuToggle:       document.getElementById('menuToggle'),
-        menuDropdown:     document.getElementById('menuDropdown')
+        totalTrips:      document.getElementById('totalTrips'),
+        totalSpent:      document.getElementById('totalSpent'),
+        homeSection:     document.getElementById('homeSection'),
+        rankingsSection: document.getElementById('rankingsSection'),
+        tripsSection:    document.getElementById('tripsSection'),
+        historySection:  document.getElementById('historySection'),
+        chartsSection:   document.getElementById('chartsSection'),
+        rankingTrips:    document.getElementById('rankingTrips'),
+        rankingSpent:    document.getElementById('rankingSpent'),
+        tripsFeed:       document.getElementById('tripsFeed'),
+        historyList:     document.getElementById('historyList'),
+        historyDetail:   document.getElementById('historyDetail'),
     },
 
     // ── Home ──────────────────────────────────────────────────────────────────
 
     updateHome(data) {
-        this.elements.totalTrips.textContent = Storage.getTotalTrips(data);
-        this.elements.totalSpent.textContent = this.formatCurrency(Storage.getTotalSpent(data));
+        animateNumber(this.elements.totalTrips, Storage.getTotalTrips(data));
+        animateNumber(this.elements.totalSpent, Storage.getTotalSpent(data), true);
 
         USERS.forEach(user => {
             const tripsEl   = document.getElementById(`trips-${user}`);
             const spentEl   = document.getElementById(`spent-${user}`);
+            const badgeEl   = document.getElementById(`badge-${user}`);
             const removeBtn = document.getElementById(`remove-${user}`);
 
-            if (tripsEl)  tripsEl.textContent = data[user]?.trips || 0;
-            if (spentEl)  spentEl.textContent = this.formatCurrency(data[user]?.spent || 0);
+            if (tripsEl) animateNumber(tripsEl, data[user]?.trips || 0);
+            if (spentEl) animateNumber(spentEl, data[user]?.spent || 0, true);
+            if (badgeEl) animateNumber(badgeEl, data[user]?.trips || 0);
 
             if (removeBtn) {
                 const has = (data[user]?.trips || 0) > 0;
                 removeBtn.disabled = !has;
-                removeBtn.classList.toggle('btn-remove-disabled', !has);
             }
         });
     },
@@ -45,12 +77,22 @@ const UI = {
     // ── Seções ────────────────────────────────────────────────────────────────
 
     showSection(name) {
-        ['homeSection','rankingsSection','tripsSection','historySection','chartsSection'].forEach(id => {
+        const all = ['homeSection','rankingsSection','tripsSection','historySection','chartsSection'];
+        all.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.classList.add('hidden');
+            if (el) { el.classList.remove('active'); el.classList.add('hidden'); }
         });
+
+        // Atualiza tab bar
+        document.querySelectorAll('.tab-item').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.section === name);
+        });
+
         const target = document.getElementById(name + 'Section');
-        if (target) target.classList.remove('hidden');
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active');
+        }
     },
 
     // ── Rankings ──────────────────────────────────────────────────────────────
@@ -79,7 +121,7 @@ const UI = {
         `).join('');
     },
 
-    // ── Feed de viagens do mês ────────────────────────────────────────────────
+    // ── Feed de viagens ───────────────────────────────────────────────────────
 
     renderTripsFeed() {
         const trips = Storage.getAllTripsFlat();
@@ -109,7 +151,7 @@ const UI = {
         }).join('');
     },
 
-    // ── Histórico mensal ──────────────────────────────────────────────────────
+    // ── Histórico ─────────────────────────────────────────────────────────────
 
     renderHistory() {
         const history = Storage.getHistory();
@@ -139,21 +181,21 @@ const UI = {
         this.elements.historyDetail.classList.remove('hidden');
         this.elements.historyDetail.innerHTML = `
             <button class="btn-back" onclick="UI.closeHistoryDetail()">← Voltar</button>
-            <h3>📅 ${entry.label}</h3>
-            <div style="margin-top:1rem">
-                <h4 style="margin-bottom:.5rem">Viagens: ${entry.totalTrips}</h4>
-                <h4 style="margin-bottom:1rem">Gasto Total: ${this.formatCurrency(entry.totalSpent)}</h4>
+            <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;margin-bottom:1rem">📅 ${entry.label}</h3>
+            <div style="margin-bottom:1rem">
+                <p style="font-size:0.85rem;color:var(--muted)">Viagens: <strong style="color:var(--text)">${entry.totalTrips}</strong></p>
+                <p style="font-size:0.85rem;color:var(--muted)">Gasto Total: <strong style="color:var(--text)">${this.formatCurrency(entry.totalSpent)}</strong></p>
             </div>
             ${USERS.map(user => `
                 <div class="ranking-item" style="margin-bottom:.5rem">
                     <span>${USER_EMOJIS[user]}</span>
                     <span class="rank-name">${user}</span>
-                    <span>${entry.data[user]?.trips || 0} viagens</span>
-                    <span>${this.formatCurrency(entry.data[user]?.spent || 0)}</span>
+                    <span style="font-size:0.82rem;color:var(--muted)">${entry.data[user]?.trips || 0} viagens</span>
+                    <span class="rank-value">${this.formatCurrency(entry.data[user]?.spent || 0)}</span>
                 </div>
             `).join('')}
             <div style="margin-top:1rem">
-                <h4>🏆 Ranking do Mês</h4>
+                <p style="font-size:0.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem">🏆 Ranking</p>
                 ${this._monthlyRankingHTML(entry.data)}
             </div>
         `;
@@ -171,7 +213,8 @@ const UI = {
             <div class="ranking-item">
                 <span class="medal">${medals[i]}</span>
                 <span class="rank-name">${item.name}</span>
-                <span>${item.trips} viagens | ${this.formatCurrency(item.spent)}</span>
+                <span style="font-size:0.82rem;color:var(--muted)">${item.trips} viagens</span>
+                <span class="rank-value">${this.formatCurrency(item.spent)}</span>
             </div>
         `).join('');
     },

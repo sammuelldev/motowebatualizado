@@ -1,19 +1,16 @@
 /**
  * Gráficos — Chart.js
- * Três gráficos: barras (viagens), pizza (gastos), linha (média histórica)
  */
 
 const Charts = {
     _instances: {},
 
-    // Cores fixas por usuário
     _colors: {
-        samuel: { bg: 'rgba(74,160,255,0.7)',  border: '#4aa0ff' },
-        luan:   { bg: 'rgba(74,222,128,0.7)',  border: '#4ade80' },
-        kaio:   { bg: 'rgba(251,191,36,0.7)',  border: '#fbbf24' }
+        samuel: { bg: 'rgba(59,130,246,0.65)',  border: '#3b82f6' },
+        luan:   { bg: 'rgba(34,197,94,0.65)',   border: '#22c55e' },
+        kaio:   { bg: 'rgba(245,158,11,0.65)',  border: '#f59e0b' }
     },
 
-    // Destrói instância anterior antes de recriar (evita o erro "canvas already in use")
     _destroy(key) {
         if (this._instances[key]) {
             this._instances[key].destroy();
@@ -27,7 +24,7 @@ const Charts = {
         this._renderAvgLine();
     },
 
-    // ── Gráfico 1: Barras — viagens por pessoa no mês atual ──────────────────
+    // ── Barras — viagens por pessoa ───────────────────────────────────────────
     _renderTripsBar() {
         this._destroy('tripsBar');
 
@@ -54,28 +51,23 @@ const Charts = {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: 'rgba(255,255,255,0.7)',
-                            stepSize: 1
-                        },
-                        grid: { color: 'rgba(255,255,255,0.08)' }
+                        ticks: { color: 'rgba(255,255,255,0.5)', stepSize: 1 },
+                        grid:  { color: 'rgba(255,255,255,0.06)' }
                     },
                     x: {
-                        ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 14 } },
-                        grid: { display: false }
+                        ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 13 } },
+                        grid:  { display: false }
                     }
                 }
             }
         });
     },
 
-    // ── Gráfico 2: Pizza — gastos por pessoa no mês atual ────────────────────
+    // ── Donut — gastos por pessoa ─────────────────────────────────────────────
     _renderSpentPie() {
         this._destroy('spentPie');
 
@@ -84,8 +76,7 @@ const Charts = {
         const values  = USERS.map(u => data[u]?.spent || 0);
         const colors  = USERS.map(u => this._colors[u].bg);
         const borders = USERS.map(u => this._colors[u].border);
-
-        const total = values.reduce((a, b) => a + b, 0);
+        const total   = values.reduce((a, b) => a + b, 0);
 
         const ctx = document.getElementById('chartSpentPie').getContext('2d');
         this._instances.spentPie = new Chart(ctx, {
@@ -105,19 +96,14 @@ const Charts = {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: {
-                            color: 'rgba(255,255,255,0.8)',
-                            padding: 16,
-                            font: { size: 13 }
-                        }
+                        labels: { color: 'rgba(255,255,255,0.7)', padding: 16, font: { size: 13 } }
                     },
                     tooltip: {
                         callbacks: {
                             label(ctx) {
                                 if (total === 0) return ' Sem dados';
-                                const val = ctx.raw;
-                                const pct = ((val / total) * 100).toFixed(1);
-                                return ` R$ ${val.toFixed(2).replace('.', ',')} (${pct}%)`;
+                                const pct = ((ctx.raw / total) * 100).toFixed(1);
+                                return ` R$ ${ctx.raw.toFixed(2).replace('.', ',')} (${pct}%)`;
                             }
                         }
                     }
@@ -126,24 +112,17 @@ const Charts = {
         });
     },
 
-    // ── Gráfico 3: Linha — gasto médio por viagem no histórico ───────────────
+    // ── Linha — gasto médio por viagem histórico ──────────────────────────────
     _renderAvgLine() {
         this._destroy('avgLine');
 
-        const history = Storage.getHistory();
-
-        // Inclui mês atual no final
+        const history      = Storage.getHistory();
         const currentData  = Storage.getCurrentData();
         const now          = new Date();
         const currentLabel = `${MONTH_NAMES[now.getMonth()].slice(0,3)} ${now.getFullYear()}`;
 
-        // Monta array: histórico (do mais antigo pro mais recente) + mês atual
-        const entries = [...history].reverse().concat([{
-            label: currentLabel,
-            data:  currentData
-        }]);
-
-        const labels = entries.map(e => e.label.split(' ').slice(0,2).join(' '));
+        const entries = [...history].reverse().concat([{ label: currentLabel, data: currentData }]);
+        const labels  = entries.map(e => e.label.split(' ').slice(0,2).join(' '));
 
         const datasets = USERS.map(u => ({
             label:           u.charAt(0).toUpperCase() + u.slice(1),
@@ -170,11 +149,7 @@ const Charts = {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: {
-                            color: 'rgba(255,255,255,0.8)',
-                            padding: 16,
-                            font: { size: 13 }
-                        }
+                        labels: { color: 'rgba(255,255,255,0.7)', padding: 16, font: { size: 13 } }
                     },
                     tooltip: {
                         callbacks: {
@@ -187,18 +162,15 @@ const Charts = {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: 'rgba(255,255,255,0.7)',
-                            callback: v => `R$ ${v.toFixed(0)}`
-                        },
-                        grid: { color: 'rgba(255,255,255,0.08)' }
+                        ticks: { color: 'rgba(255,255,255,0.5)', callback: v => `R$${v.toFixed(0)}` },
+                        grid:  { color: 'rgba(255,255,255,0.06)' }
                     },
                     x: {
-                        ticks: { color: 'rgba(255,255,255,0.7)' },
-                        grid: { display: false }
+                        ticks: { color: 'rgba(255,255,255,0.5)' },
+                        grid:  { display: false }
                     }
                 }
             }
         });
     }
-};7
+};

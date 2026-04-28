@@ -2,186 +2,198 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Moto Diário · Samuel, Luan & Kaio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- MENU SUPERIOR -->
-    <nav class="top-menu">
-        <button class="menu-toggle" id="menuToggle">⋮</button>
-        <div class="menu-dropdown hidden" id="menuDropdown">
-            <button class="menu-item" data-section="home">🏠 Início</button>
-            <button class="menu-item" data-section="rankings">🏆 Rankings</button>
-            <button class="menu-item" data-section="trips">🛵 Viagens</button>
-            <button class="menu-item" data-section="history">📅 Histórico</button>
-            <button class="menu-item" data-section="charts">📊 Gráficos</button>
-        </div>
-        <h1 class="nav-title">🏍️ MOTO DIÁRIO</h1>
+    <!-- ── TOP NAV ─────────────────────────────────────────────────────────── -->
+    <nav class="top-nav">
+        <span class="nav-logo">MOTO<span class="nav-dot">·</span>DIÁRIO</span>
+        <span class="nav-sub">SAMUEL · LUAN · KAIO</span>
     </nav>
 
+    <!-- ── APP ─────────────────────────────────────────────────────────────── -->
     <div id="app">
 
-        <!-- ── TELA INICIAL ──────────────────────────────────────────────── -->
-        <section id="homeSection" class="screen">
-            <div class="total-box">
-                <div class="total-row">
-                    <div>
-                        <div class="total-label">TOTAL VIAGENS</div>
-                        <div class="total-value" id="totalTrips">0</div>
+        <!-- HOME -->
+        <section id="homeSection" class="screen active">
+            <div class="hero-card">
+                <div class="hero-glow"></div>
+                <div class="hero-row">
+                    <div class="hero-stat">
+                        <div class="hero-label">Viagens</div>
+                        <div class="hero-value" id="totalTrips">0</div>
                     </div>
-                    <div>
-                        <div class="total-label">TOTAL GASTO</div>
-                        <div class="total-value" id="totalSpent">R$ 0,00</div>
+                    <div class="hero-divider"></div>
+                    <div class="hero-stat">
+                        <div class="hero-label">Gasto Total</div>
+                        <div class="hero-value hero-value--money" id="totalSpent">R$ 0,00</div>
                     </div>
                 </div>
-                <div class="sync-indicator">☁️ firebase</div>
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    ao vivo · firebase
+                </div>
             </div>
 
-            <div class="user-grid">
+            <div class="user-list">
                 <!-- Samuel -->
                 <div class="user-card" data-user="samuel">
-                    <div class="user-card-content">
-                        <div class="user-icon">🤓</div>
-                        <div class="user-stats">
-                            <div class="stat-row">
-                                <span class="stat-label">Viagens</span>
-                                <span class="stat-value counter-large" id="trips-samuel">0</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Gasto</span>
-                                <span class="stat-value spent-value" id="spent-samuel">R$ 0,00</span>
-                            </div>
-                        </div>
+                    <div class="user-stripe user-stripe--samuel"></div>
+                    <div class="user-emoji">🤓</div>
+                    <div class="user-info">
                         <div class="user-name">Samuel</div>
+                        <div class="user-stats-row">
+                            <span class="user-stat">🏍️ <strong id="trips-samuel">0</strong></span>
+                            <span class="user-stat">💸 <strong id="spent-samuel">R$ 0,00</strong></span>
+                        </div>
                     </div>
-                    <button class="btn-remove btn-remove-disabled" id="remove-samuel" data-user="samuel" disabled>
-                        ↩ Desfazer
-                    </button>
+                    <div class="user-right">
+                        <div class="trips-badge trips-badge--samuel" id="badge-samuel">0</div>
+                        <button class="btn-undo" id="remove-samuel" data-user="samuel" disabled>↩ desfazer</button>
+                    </div>
                 </div>
 
                 <!-- Luan -->
                 <div class="user-card" data-user="luan">
-                    <div class="user-card-content">
-                        <div class="user-icon">🧐</div>
-                        <div class="user-stats">
-                            <div class="stat-row">
-                                <span class="stat-label">Viagens</span>
-                                <span class="stat-value counter-large" id="trips-luan">0</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Gasto</span>
-                                <span class="stat-value spent-value" id="spent-luan">R$ 0,00</span>
-                            </div>
-                        </div>
+                    <div class="user-stripe user-stripe--luan"></div>
+                    <div class="user-emoji">🧐</div>
+                    <div class="user-info">
                         <div class="user-name">Luan</div>
+                        <div class="user-stats-row">
+                            <span class="user-stat">🏍️ <strong id="trips-luan">0</strong></span>
+                            <span class="user-stat">💸 <strong id="spent-luan">R$ 0,00</strong></span>
+                        </div>
                     </div>
-                    <button class="btn-remove btn-remove-disabled" id="remove-luan" data-user="luan" disabled>
-                        ↩ Desfazer
-                    </button>
+                    <div class="user-right">
+                        <div class="trips-badge trips-badge--luan" id="badge-luan">0</div>
+                        <button class="btn-undo" id="remove-luan" data-user="luan" disabled>↩ desfazer</button>
+                    </div>
                 </div>
 
                 <!-- Kaio -->
                 <div class="user-card" data-user="kaio">
-                    <div class="user-card-content">
-                        <div class="user-icon">😎</div>
-                        <div class="user-stats">
-                            <div class="stat-row">
-                                <span class="stat-label">Viagens</span>
-                                <span class="stat-value counter-large" id="trips-kaio">0</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Gasto</span>
-                                <span class="stat-value spent-value" id="spent-kaio">R$ 0,00</span>
-                            </div>
-                        </div>
+                    <div class="user-stripe user-stripe--kaio"></div>
+                    <div class="user-emoji">😎</div>
+                    <div class="user-info">
                         <div class="user-name">Kaio</div>
+                        <div class="user-stats-row">
+                            <span class="user-stat">🏍️ <strong id="trips-kaio">0</strong></span>
+                            <span class="user-stat">💸 <strong id="spent-kaio">R$ 0,00</strong></span>
+                        </div>
                     </div>
-                    <button class="btn-remove btn-remove-disabled" id="remove-kaio" data-user="kaio" disabled>
-                        ↩ Desfazer
-                    </button>
+                    <div class="user-right">
+                        <div class="trips-badge trips-badge--kaio" id="badge-kaio">0</div>
+                        <button class="btn-undo" id="remove-kaio" data-user="kaio" disabled>↩ desfazer</button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── RANKINGS ──────────────────────────────────────────────────── -->
+        <!-- RANKINGS -->
         <section id="rankingsSection" class="screen hidden">
-            <h2 class="section-title">🏆 RANKINGS DO MÊS</h2>
-            <div class="rankings-container">
-                <div class="ranking-box">
-                    <h3>🏍️ Mais Viagens</h3>
-                    <div class="ranking-list" id="rankingTrips"></div>
-                </div>
-                <div class="ranking-box">
-                    <h3>💰 Mais Gastos</h3>
-                    <div class="ranking-list" id="rankingSpent"></div>
-                </div>
+            <div class="section-header">
+                <h2 class="section-title">Rankings</h2>
+                <p class="section-sub">Mês atual</p>
             </div>
+            <div class="ranking-group-label">🏍️ Mais Viagens</div>
+            <div class="ranking-list" id="rankingTrips"></div>
+            <div class="ranking-group-label" style="margin-top:1.5rem">💰 Mais Gastos</div>
+            <div class="ranking-list" id="rankingSpent"></div>
         </section>
 
-        <!-- ── VIAGENS DO MÊS ─────────────────────────────────────────────── -->
+        <!-- VIAGENS -->
         <section id="tripsSection" class="screen hidden">
-            <h2 class="section-title">🛵 VIAGENS DO MÊS</h2>
+            <div class="section-header">
+                <h2 class="section-title">Viagens</h2>
+                <p class="section-sub">Registro do mês</p>
+            </div>
             <div class="trips-feed" id="tripsFeed">
                 <p class="empty-message">Nenhuma viagem registrada este mês</p>
             </div>
         </section>
 
-        <!-- ── HISTÓRICO MENSAL ───────────────────────────────────────────── -->
+        <!-- HISTÓRICO -->
         <section id="historySection" class="screen hidden">
-            <h2 class="section-title">📅 HISTÓRICO MENSAL</h2>
-            <div class="history-list" id="historyList">
+            <div class="section-header">
+                <h2 class="section-title">Histórico</h2>
+                <p class="section-sub">Meses anteriores</p>
+            </div>
+            <div class="history-grid" id="historyList">
                 <p class="empty-message">Nenhum mês encerrado ainda</p>
             </div>
             <div class="history-detail hidden" id="historyDetail"></div>
         </section>
 
-        <!-- ── GRÁFICOS ───────────────────────────────────────────────────── -->
+        <!-- GRÁFICOS -->
         <section id="chartsSection" class="screen hidden">
-            <h2 class="section-title">📊 GRÁFICOS</h2>
-
-            <div class="chart-card">
-                <h3 class="chart-title">🏍️ Viagens por Pessoa — Mês Atual</h3>
-                <div class="chart-wrap">
-                    <canvas id="chartTripsBar"></canvas>
-                </div>
+            <div class="section-header">
+                <h2 class="section-title">Gráficos</h2>
+                <p class="section-sub">Análise visual</p>
             </div>
-
             <div class="chart-card">
-                <h3 class="chart-title">💰 Gasto por Pessoa — Mês Atual</h3>
-                <div class="chart-wrap">
-                    <canvas id="chartSpentPie"></canvas>
-                </div>
+                <div class="chart-card-label">🏍️ Viagens por pessoa — mês atual</div>
+                <canvas id="chartTripsBar"></canvas>
             </div>
-
             <div class="chart-card">
-                <h3 class="chart-title">📈 Gasto Médio por Viagem — Histórico</h3>
-                <div class="chart-wrap">
-                    <canvas id="chartAvgLine"></canvas>
-                </div>
+                <div class="chart-card-label">💰 Gasto por pessoa — mês atual</div>
+                <canvas id="chartSpentPie"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card-label">📈 Gasto médio por viagem — histórico</div>
+                <canvas id="chartAvgLine"></canvas>
             </div>
         </section>
 
     </div>
 
-    <!-- MODAL -->
+    <!-- ── BOTTOM TAB BAR ──────────────────────────────────────────────────── -->
+    <nav class="tab-bar">
+        <button class="tab-item active" data-section="home">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">Início</span>
+        </button>
+        <button class="tab-item" data-section="rankings">
+            <span class="tab-icon">🏆</span>
+            <span class="tab-label">Rankings</span>
+        </button>
+        <button class="tab-item" data-section="trips">
+            <span class="tab-icon">🛵</span>
+            <span class="tab-label">Viagens</span>
+        </button>
+        <button class="tab-item" data-section="history">
+            <span class="tab-icon">📅</span>
+            <span class="tab-label">Histórico</span>
+        </button>
+        <button class="tab-item" data-section="charts">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Gráficos</span>
+        </button>
+    </nav>
+
+    <!-- ── MODAL SHEET ─────────────────────────────────────────────────────── -->
     <div class="modal-overlay hidden" id="modalOverlay">
-        <div class="modal-box">
-            <button class="modal-close" id="modalClose">✕</button>
+        <div class="modal-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" id="modalClose">✕</button>
             <div class="modal-icon" id="modalIcon">🤓</div>
             <h3 class="modal-title" id="modalTitle">Samuel</h3>
             <p class="modal-subtitle">Quanto você gastou na viagem?</p>
             <input type="number" class="modal-input" id="modalAmount"
-                   placeholder="R$ 00.00" min="0" step="0.01" inputmode="decimal">
+                   placeholder="0,00" min="0" step="0.01" inputmode="decimal">
             <button class="btn btn-primary modal-btn" id="modalConfirm">
-                ✅ Confirmar Viagem
+                Confirmar Viagem
             </button>
             <p class="modal-error hidden" id="modalError">Digite um valor válido</p>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- ── FIREBASE SDK ─────────────────────────────────────────────────────── -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script>
@@ -198,7 +210,7 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Seus scripts -->
+    <!-- App scripts -->
     <script src="config.js"></script>
     <script src="storage.js"></script>
     <script src="ui.js"></script>

@@ -1,5 +1,5 @@
 /**
- * Controle da Modal de Adicionar Viagem
+ * Controle da Modal — Sheet bottom drawer
  */
 
 const Modal = {
@@ -20,23 +20,23 @@ const Modal = {
         this.currentUser  = username;
         this.isProcessing = false;
 
-        this.elements.icon.textContent      = USER_EMOJIS[username];
-        this.elements.title.textContent     = username.charAt(0).toUpperCase() + username.slice(1);
-        this.elements.amount.value          = '';
+        this.elements.icon.textContent    = USER_EMOJIS[username];
+        this.elements.title.textContent   = username.charAt(0).toUpperCase() + username.slice(1);
+        this.elements.amount.value        = '';
         this.elements.error.classList.add('hidden');
-        this.elements.confirm.disabled      = false;
-        this.elements.confirm.textContent   = '✅ Confirmar Viagem';
+        this.elements.confirm.disabled    = false;
+        this.elements.confirm.textContent = 'Confirmar Viagem';
         this.elements.overlay.classList.remove('hidden');
 
-        setTimeout(() => this.elements.amount.focus(), 80);
+        setTimeout(() => this.elements.amount.focus(), 120);
     },
 
     close() {
         this.elements.overlay.classList.add('hidden');
-        this.elements.amount.value          = '';
+        this.elements.amount.value        = '';
         this.elements.error.classList.add('hidden');
-        this.elements.confirm.disabled      = false;
-        this.elements.confirm.textContent   = '✅ Confirmar Viagem';
+        this.elements.confirm.disabled    = false;
+        this.elements.confirm.textContent = 'Confirmar Viagem';
         this.currentUser  = null;
         this.isProcessing = false;
     },
@@ -57,8 +57,6 @@ const Modal = {
         this.elements.confirm.textContent = '⏳ Salvando...';
 
         const username = this.currentUser;
-
-        // Fecha o modal antes de salvar — UI responde imediatamente
         this.close();
 
         const card = document.querySelector(`[data-user="${username}"]`);
@@ -67,12 +65,10 @@ const Modal = {
             setTimeout(() => card.classList.remove('pulse-animation'), 400);
         }
 
-        // Salva no Firebase (async — os listeners atualizam a UI automaticamente)
         await Storage.addTrip(username, value);
     },
 
     init() {
-        // Clona botões para evitar listeners duplicados
         ['confirm', 'close'].forEach(key => {
             const el    = this.elements[key];
             const fresh = el.cloneNode(true);
