@@ -55,10 +55,13 @@
             } else if (section === 'trips') {
                 UI.renderTripsFeed();
 
-            } else if (section === 'history') {
-                UI.elements.historyDetail.classList.add('hidden');
-                UI.renderHistory();
-            }
+           } else if (section === 'history') {
+    UI.elements.historyDetail.classList.add('hidden');
+    UI.renderHistory();
+
+} else if (section === 'charts') {
+    Charts.render();
+}
         });
     });
 

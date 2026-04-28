@@ -10,6 +10,7 @@ const UI = {
         rankingsSection:  document.getElementById('rankingsSection'),
         tripsSection:     document.getElementById('tripsSection'),
         historySection:   document.getElementById('historySection'),
+        chartsSection:    document.getElementById('chartsSection'),
         rankingTrips:     document.getElementById('rankingTrips'),
         rankingSpent:     document.getElementById('rankingSpent'),
         tripsFeed:        document.getElementById('tripsFeed'),
@@ -26,12 +27,12 @@ const UI = {
         this.elements.totalSpent.textContent = this.formatCurrency(Storage.getTotalSpent(data));
 
         USERS.forEach(user => {
-            const tripsEl  = document.getElementById(`trips-${user}`);
-            const spentEl  = document.getElementById(`spent-${user}`);
+            const tripsEl   = document.getElementById(`trips-${user}`);
+            const spentEl   = document.getElementById(`spent-${user}`);
             const removeBtn = document.getElementById(`remove-${user}`);
 
-            if (tripsEl)  tripsEl.textContent  = data[user]?.trips || 0;
-            if (spentEl)  spentEl.textContent  = this.formatCurrency(data[user]?.spent || 0);
+            if (tripsEl)  tripsEl.textContent = data[user]?.trips || 0;
+            if (spentEl)  spentEl.textContent = this.formatCurrency(data[user]?.spent || 0);
 
             if (removeBtn) {
                 const has = (data[user]?.trips || 0) > 0;
@@ -44,8 +45,9 @@ const UI = {
     // ── Seções ────────────────────────────────────────────────────────────────
 
     showSection(name) {
-        ['homeSection','rankingsSection','tripsSection','historySection'].forEach(id => {
-            this.elements[id].classList.add('hidden');
+        ['homeSection','rankingsSection','tripsSection','historySection','chartsSection'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
         });
         const target = document.getElementById(name + 'Section');
         if (target) target.classList.remove('hidden');
@@ -89,7 +91,7 @@ const UI = {
         }
 
         feed.innerHTML = trips.map(trip => {
-            const date = new Date(trip.timestamp);
+            const date    = new Date(trip.timestamp);
             const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
             const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             const name    = trip.user.charAt(0).toUpperCase() + trip.user.slice(1);
@@ -158,8 +160,8 @@ const UI = {
     },
 
     _monthlyRankingHTML(data) {
-        const medals  = ['🥇','🥈','🥉'];
-        const sorted  = USERS.map(u => ({
+        const medals = ['🥇','🥈','🥉'];
+        const sorted = USERS.map(u => ({
             name:  u,
             trips: data[u]?.trips || 0,
             spent: data[u]?.spent || 0
@@ -180,11 +182,13 @@ const UI = {
 
     // ── Remove viagem ─────────────────────────────────────────────────────────
 
-    removeLastTrip(username) {
+    async removeLastTrip(username) {
         const btn = document.getElementById(`remove-${username}`);
         if (!btn || btn.disabled) return;
 
-        const removed = Storage.removeLastTrip(username);
+        btn.disabled = true;
+
+        const removed = await Storage.removeLastTrip(username);
         if (!removed) { this.showToast('Nenhuma viagem para remover', 'warning'); return; }
 
         const card = document.querySelector(`[data-user="${username}"]`);
@@ -209,8 +213,8 @@ const UI = {
         if (existing) existing.remove();
 
         const toast = document.createElement('div');
-        toast.id        = 'ui-toast';
-        toast.className = `ui-toast ui-toast-${type}`;
+        toast.id          = 'ui-toast';
+        toast.className   = `ui-toast ui-toast-${type}`;
         toast.textContent = message;
         document.body.appendChild(toast);
 

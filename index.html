@@ -16,6 +16,7 @@
             <button class="menu-item" data-section="rankings">🏆 Rankings</button>
             <button class="menu-item" data-section="trips">🛵 Viagens</button>
             <button class="menu-item" data-section="history">📅 Histórico</button>
+            <button class="menu-item" data-section="charts">📊 Gráficos</button>
         </div>
         <h1 class="nav-title">🏍️ MOTO DIÁRIO</h1>
     </nav>
@@ -35,7 +36,7 @@
                         <div class="total-value" id="totalSpent">R$ 0,00</div>
                     </div>
                 </div>
-                <div class="sync-indicator">⚡ local</div>
+                <div class="sync-indicator">☁️ firebase</div>
             </div>
 
             <div class="user-grid">
@@ -119,7 +120,7 @@
             </div>
         </section>
 
-        <!-- ── VIAGENS DO MÊS (feed em tempo real) ───────────────────────── -->
+        <!-- ── VIAGENS DO MÊS ─────────────────────────────────────────────── -->
         <section id="tripsSection" class="screen hidden">
             <h2 class="section-title">🛵 VIAGENS DO MÊS</h2>
             <div class="trips-feed" id="tripsFeed">
@@ -134,6 +135,32 @@
                 <p class="empty-message">Nenhum mês encerrado ainda</p>
             </div>
             <div class="history-detail hidden" id="historyDetail"></div>
+        </section>
+
+        <!-- ── GRÁFICOS ───────────────────────────────────────────────────── -->
+        <section id="chartsSection" class="screen hidden">
+            <h2 class="section-title">📊 GRÁFICOS</h2>
+
+            <div class="chart-card">
+                <h3 class="chart-title">🏍️ Viagens por Pessoa — Mês Atual</h3>
+                <div class="chart-wrap">
+                    <canvas id="chartTripsBar"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">💰 Gasto por Pessoa — Mês Atual</h3>
+                <div class="chart-wrap">
+                    <canvas id="chartSpentPie"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">📈 Gasto Médio por Viagem — Histórico</h3>
+                <div class="chart-wrap">
+                    <canvas id="chartAvgLine"></canvas>
+                </div>
+            </div>
         </section>
 
     </div>
@@ -153,7 +180,9 @@
             <p class="modal-error hidden" id="modalError">Digite um valor válido</p>
         </div>
     </div>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script>
         firebase.initializeApp({
@@ -165,11 +194,17 @@
             appId:             "1:898268985123:web:8f84b5a94cf3e24f893e96"
         });
     </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Seus scripts -->
     <script src="config.js"></script>
     <script src="storage.js"></script>
     <script src="ui.js"></script>
     <script src="ranking.js"></script>
     <script src="modal.js"></script>
+    <script src="charts.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
